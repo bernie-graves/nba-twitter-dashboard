@@ -166,6 +166,7 @@ app.layout = html.Div(children=[
 
 ])
 
+# Updates the number of tweets on each day graph
 @app.callback(
     Output('total-tweets-graph', 'figure'),
     Input('name-dropdown', 'value'),
@@ -181,6 +182,7 @@ def update_graph(name, seasons):
     fig.update_yaxes(title=y_title)
     return fig
 
+# allows you to select a season
 @app.callback(
     Output('season-dropdown', 'options'),
     Input('name-dropdown', 'value'))
@@ -188,7 +190,7 @@ def set_szn_options(selected_name):
     df_player = df[df['player_name'] == selected_name]
     return [{'label':"{}-{}".format(i, int(str(i)[-2:])+1), 'value':i} for i in df_player['season'].unique()]
 
-
+# Update the daily sentiment graph when you select a date
 @app.callback(
     Output('daily-sentiment-graph', 'figure'),
     Input('total-tweets-graph', 'clickData'),
@@ -203,6 +205,7 @@ def update_daily_sentiment(clickData, player):
     else:
         return daily_sent_graph
 
+# Updates the season stats vs next 7 day stats
 @app.callback(
     Output('daily-vs-season-graph', "figure"),
     Input('total-tweets-graph', 'clickData'),
@@ -219,6 +222,7 @@ def update_daily_vs_season(clickData, player, stats):
         szn = get_szn(date)
         return daily_vs_szn_graph(player, date, szn, selected_stats)
 
+# Updates the table of tweets
 @app.callback(
     Output('tweets_tbl', 'children'),
     Input('total-tweets-graph', 'clickData'),
@@ -298,6 +302,8 @@ def update_tweets(clickData, player):
                         },
                     ]
                     )
+
+# updates the section header to the appropriate player and date
 @app.callback(
     Output('tweets_title', 'children'),
     Input('total-tweets-graph', 'clickData'),
